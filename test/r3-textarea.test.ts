@@ -7,11 +7,10 @@ let el: R3Textarea;
 const cleanComponent = async () => {
   el = await fixture<R3Textarea>(html`<r3-textarea></r3-textarea>`);
   await el.updateComplete;
-}
+};
 
-const getAttribute = (selector: String = '', attribute: string) => {
-  return el.shadowRoot?.querySelector(`${selector}`)?.getAttribute(attribute);
-}
+const getAttribute = (selector: String = '', attribute: string) =>
+  el.shadowRoot?.querySelector(`${selector}`)?.getAttribute(attribute);
 
 describe('R3Textarea', () => {
   describe('Default value', () => {
@@ -21,9 +20,12 @@ describe('R3Textarea', () => {
       expect(el.ambient).to.equal('light');
       assert.typeOf(el.ambient, 'String');
 
-      expect(el.height).to.equal(10);
-      assert.typeOf(el.height, 'Number');
-      
+      expect(el.description).to.equal('Default Description');
+      assert.typeOf(el.description, 'String');
+
+      expect(el.descriptionType).to.equal('info');
+      assert.typeOf(el.descriptionType, 'String');
+
       expect(el.label).to.equal('Default Text');
       assert.typeOf(el.label, 'String');
 
@@ -36,11 +38,14 @@ describe('R3Textarea', () => {
       expect(el.required).to.be.false;
       assert.typeOf(el.required, 'Boolean');
 
+      expect(el.size).to.deep.equal({ width: 20, height: 10 });
+      assert.typeOf(el.size, 'Object');
+
       expect(el.value).to.equal('');
       assert.typeOf(el.value, 'String');
 
-      expect(el.width).to.equal(20);
-      assert.typeOf(el.width, 'Number');
+      expect(el.withDescription).to.be.false;
+      assert.typeOf(el.withDescription, 'Boolean');
 
       expect(el.withLabel).to.be.false;
       assert.typeOf(el.withLabel, 'Boolean');
@@ -54,6 +59,12 @@ describe('R3Textarea', () => {
     it('View label not displayed', () => {
       const labelText = el.shadowRoot?.querySelector('#label')?.textContent;
       expect(labelText).to.equal(undefined);
+    });
+
+    it('View description not displayed', () => {
+      const description =
+        el.shadowRoot?.querySelector('#description')?.textContent;
+      expect(description).to.equal(undefined);
     });
 
     it('Value in textarea is empty', () => {
@@ -90,6 +101,24 @@ describe('R3Textarea', () => {
       expect(labelText).to.equal('CUSTOM TEXT');
     });
 
+    it('View description text in Dom', async () => {
+      el.description = 'CUSTOM TEXT';
+      el.withDescription = true;
+      await el.updateComplete;
+      const description =
+        el.shadowRoot?.querySelector('#description')?.textContent;
+      expect(description).to.equal('CUSTOM TEXT');
+    });
+
+    it('View description type text in Dom', async () => {
+      el.description = 'CUSTOM TEXT';
+      el.descriptionType = 'warning';
+      el.withDescription = true;
+      await el.updateComplete;
+      const descriptionType = getAttribute('#description', 'class');
+      expect(descriptionType).to.equal('warning');
+    });
+
     it('Get value in textarea from DOM', async () => {
       el.value = 'CUSTOM TEXT';
       await el.updateComplete;
@@ -98,8 +127,7 @@ describe('R3Textarea', () => {
     });
 
     it('Textarea size', async () => {
-      el.width = 300;
-      el.height = 200;
+      el.size = { width: 300, height: 200 };
       await el.updateComplete;
       const size = getAttribute('#textarea', 'style');
       expect(size).to.equal('width: 300rem; height: 200rem;');
