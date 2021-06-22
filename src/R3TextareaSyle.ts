@@ -6,7 +6,7 @@ export default css`
 
     --main-color-white: #fff;
     --main-color-red: #c70039;
-    --main-color-yellow: #c70039;
+    --main-color-yellow: #c5cf27;
     --main-color-blue: #12dee1;
     --main-color-dark: black;
   }
