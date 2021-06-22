@@ -19,7 +19,13 @@
 
     render(
       html`
-        <r3-textarea with-label ambient="dark"></r3-textarea>
+        <r3-textarea
+          ambient="dark"
+          with-label
+          with-description
+          description="Hello world"
+          description-type="warning"
+        ></r3-textarea>
       `,
       document.querySelector('#demo')
     );
